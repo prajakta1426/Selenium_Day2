@@ -17,7 +17,7 @@ public class TestNGMultiplePages {
     WebDriver driver;
     WebDriverWait wait;
 
-    @BeforeMethod
+    @BeforeMethod(groups = {"smoke"})
     public void setup() throws InterruptedException {
         driver = new ChromeDriver();
         wait=new WebDriverWait(driver, Duration.ofSeconds(10));
@@ -25,7 +25,7 @@ public class TestNGMultiplePages {
         Thread.sleep(1000);
     }
 
-    @Test
+    @Test(groups = {"smoke"})
     public  void validatMultiplePages() throws InterruptedException {
         driver.get("https://www.saucedemo.com/");
         Assert.assertEquals(driver.getTitle(),"Swag Labs","SauceDemo title mismatch");
@@ -35,7 +35,7 @@ public class TestNGMultiplePages {
 
     }
 
-    @AfterMethod
+    @AfterMethod(groups = {"smoke"})
     public void teardown()
     {
         if(driver!=null)

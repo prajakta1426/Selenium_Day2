@@ -22,7 +22,7 @@ public class SauceDemo {
         By loginButton = By.id("login-button");
         By errormessage = By.xpath("//h3[@data-test='error']");
 
-        @BeforeMethod
+        @BeforeMethod(groups = {"smoke"})
         public void setup() throws InterruptedException {
             driver = new ChromeDriver();
             wait=new WebDriverWait(driver, Duration.ofSeconds(10));
@@ -30,7 +30,7 @@ public class SauceDemo {
             Thread.sleep(1000);
         }
 
-        @Test
+        @Test(priority = 1,groups = {"smoke"})
         public void testPositiveLoginSauceDemo() throws InterruptedException {
             driver.get("https://www.saucedemo.com/");
             Thread.sleep(2000);
@@ -50,7 +50,24 @@ public class SauceDemo {
 
         }
 
-        @AfterMethod
+        @Test(priority = 2)
+        public void testNegativeLoginSauceDemo() throws InterruptedException {
+            driver.get("https://www.saucedemo.com/");
+            Thread.sleep(2000);
+            WebElement username = wait.until(ExpectedConditions.visibilityOfElementLocated(usernameField));
+            WebElement password = wait.until(ExpectedConditions.visibilityOfElementLocated(passwordField));
+            WebElement login = wait.until(ExpectedConditions.visibilityOfElementLocated(loginButton));
+
+            username.sendKeys("standard_user");
+            password.sendKeys("secret_sauce1");
+            login.click();
+
+            WebElement errorButton = wait.until(ExpectedConditions.visibilityOfElementLocated(errormessage));
+            Assert.assertTrue(errorButton.isDisplayed(),"Error message is not displayed");
+
+        }
+
+        @AfterMethod(groups = {"smoke"})
         public void teardown()
         {
             if(driver!=null)
